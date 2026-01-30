@@ -47,6 +47,9 @@ void initGPIO() {
 	PORTA->PCR[SWITCH_PIN]&=  ~PORT_PCR_MUX_MASK;
 	PORTA->PCR[SWITCH_PIN] |= PORT_PCR_MUX(1);
 	GPIOA->PDDR &= ~(1 << SWITCH_PIN);
+
+	GPIOE->PSOR |= (1 << RED_PIN) | (1 << BLUE_PIN);
+	GPIOD->PSOR |= (1 << GREEN_PIN);
 }
 
 
