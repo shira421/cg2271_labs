@@ -51,20 +51,20 @@ void initTimer() {
     setMCGIRCLK();
 
     //Turn on clock gating for TPM0
-    SIM->SCGC6|=SIM_SCGC6_TPM0_MASK;
-    SIM->SOPT2&=~SIM_SOPT2_TPMSRC_MASK;
+    SIM->SCGC6 |= SIM_SCGC6_TPM0_MASK;
+    SIM->SOPT2 &= ~SIM_SOPT2_TPMSRC_MASK;
 
     //Clear TPM clock source and select MCGIRCLK
-    SIM->SOPT2|=SIM_SOPT2_TPMSRC(0b11);
+    SIM->SOPT2 |= SIM_SOPT2_TPMSRC(0b11);
 
     //Turn off TPM0 and clear Prescale counter
-    TPM0->SC&=~(TPM_SC_CMOD_MASK | TPM_SC_PS_MASK);
+    TPM0->SC &= ~(TPM_SC_CMOD_MASK | TPM_SC_PS_MASK);
 
     //Initialize counter to 0
-    TPM0->CNT=0;
+    TPM0->CNT = 0;
 
     //Set Prescale Counter
-    TPM0->SC|= ((TPM_SC_TOIE_MASK) | TPM_SC_PS(0b011));
+    TPM0->SC |= ((TPM_SC_TOIE_MASK) | TPM_SC_PS(0b011));
 
     //Initialize modulo
     TPM0->MOD = 62500;
@@ -73,7 +73,7 @@ void initTimer() {
     NVIC_SetPriority(TPM0_IRQn, 0);
 
     NVIC_EnableIRQ(TPM0_IRQn);
-    //setMCGIRClk(); //uncomment this after question 2
+    //setMCGIRCLK(); //uncomment this after question 2
 }
 
 void startTimer() {
