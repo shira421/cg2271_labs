@@ -48,7 +48,7 @@ void setMCGIRCLK() {
 
 void initTimer() {
 	NVIC_DisableIRQ(TPM0_IRQn);
-    setMCGIRClk();
+    setMCGIRCLK();
 
     //Turn on clock gating for TPM0
     SIM->SCGC6|=SIM_SCGC6_TPM0_MASK;
@@ -88,7 +88,7 @@ void stopTimer() {
 volatile int count = 0;
 void TPM0_IRQHandler() {
     //clear pending IRQ
-	NVIC_ClearPendingIRQ(TPM0_IRQr);
+	NVIC_ClearPendingIRQ(TPM0_IRQn);
 
 	//Check if TOF is set
 	if(TPM0->STATUS & TPM_STATUS_TOF_MASK) {
@@ -103,7 +103,20 @@ void TPM0_IRQHandler() {
 	}
 }
 
-void initGPIO()
+void initGPIO() {
+	SIM->SCGC5 |= (SIM_SCGC5_PORTA_MASK | SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTE_MASK);
+
+    PORTE->PCR[RED_PIN] &= ~PORT_PCR_MUX_MASK;
+    PORTD->PCR[GREEN_PIN] &= ~PORT_PCR_MUX_MASK;
+    PORTE->PCR[BLUE_PIN] &= ~PORT_PCR_MUX_MASK;
+
+    PORTE->PCR[RED_PIN] = PORT_PCR_MUX(1);
+    PORTD->PCR[GREEN_PIN] = PORT_PCR_MUX(1);
+    PORTE->PCR[BLUE_PIN] = PORT_PCR_MUX(1);
+
+    GPIOE->PDDR |= ((1 << RED_PIN) | (1 << BLUE_PIN));
+    GPIOD->PDDR |= (1 << GREEN_PIN);
+}
 
 void ledOn(TLED led) {
 	switch(led) {
